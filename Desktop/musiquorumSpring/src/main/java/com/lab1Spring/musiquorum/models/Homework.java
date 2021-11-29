@@ -22,6 +22,7 @@ public class Homework {
     @NotNull
     private UUID assignmentId;
 
+    //hacerlo una relacion con una nueva clase file
     private UUID fileid;
 
 
