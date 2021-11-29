@@ -1,8 +1,9 @@
 package com.lab1Spring.musiquorum.controllers;
 
+import com.lab1Spring.musiquorum.dtos.AssignmentDTO;
 import com.lab1Spring.musiquorum.dtos.CreateClassDTO;
+import com.lab1Spring.musiquorum.models.Assignment;
 import com.lab1Spring.musiquorum.models.Class;
-import com.lab1Spring.musiquorum.models.ClassFile;
 import com.lab1Spring.musiquorum.responses.UploadFileResponse;
 import com.lab1Spring.musiquorum.services.ClassService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,8 +46,12 @@ public class ClassController {
     @PostMapping("/uploadMultipleFiles/{classId}")
     public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") List<MultipartFile> files, @PathVariable UUID classId) {
         return files.stream().map(file -> classService.uploadFile(file, classId)).collect(Collectors.toList());
+    }
 
 
+    @PostMapping("/assignment/{classId}")
+    public ResponseEntity<Assignment> createAssigment(@RequestBody AssignmentDTO assignmentDTO, @PathVariable UUID classId) {
+        return  ResponseEntity.ok(classService.createAssignment(assignmentDTO, classId));
     }
 
 //    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {

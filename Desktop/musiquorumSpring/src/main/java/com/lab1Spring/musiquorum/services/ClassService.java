@@ -1,14 +1,13 @@
 package com.lab1Spring.musiquorum.services;
 
+import com.lab1Spring.musiquorum.dtos.AssignmentDTO;
 import com.lab1Spring.musiquorum.dtos.CreateClassDTO;
 import com.lab1Spring.musiquorum.exceptions.BadRequestException;
 import com.lab1Spring.musiquorum.exceptions.FileStorageException;
+import com.lab1Spring.musiquorum.models.*;
 import com.lab1Spring.musiquorum.models.Class;
-import com.lab1Spring.musiquorum.models.Course;
-import com.lab1Spring.musiquorum.models.ClassFile;
-import com.lab1Spring.musiquorum.repositories.ClassRepository;
-import com.lab1Spring.musiquorum.repositories.CourseRepository;
-import com.lab1Spring.musiquorum.repositories.FileRepository;
+import com.lab1Spring.musiquorum.models.AssignmentFile;
+import com.lab1Spring.musiquorum.repositories.*;
 import com.lab1Spring.musiquorum.responses.UploadFileResponse;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +32,12 @@ public class ClassService {
 
     @Autowired
     private FileRepository fileRepository;
+
+    @Autowired
+    private AssignmentFileRepository assignmentFileRespoitory;
+
+    @Autowired
+    private AssignmentRepository assignmentRepository;
 
 
     public CreateClassDTO addClass(CreateClassDTO classDTO, UUID courseId) {
@@ -71,6 +76,23 @@ public class ClassService {
 
     }
 
+    public void saveAssignmentFile(MultipartFile multipartFile, Assignment assignment) {
+        // Normalize file name
+        String fileName = StringUtils.cleanPath(Objects.requireNonNull(multipartFile.getOriginalFilename()));
+        try {
+            // Check if the file's name contains invalid characters
+            if(fileName.contains("..")) {
+                throw new FileStorageException("Sorry! Filename contains invalid path sequence " + fileName);
+            }
+            AssignmentFile assignmentFile = new AssignmentFile(fileName, multipartFile.getContentType(), new Date(), assignment, multipartFile.getBytes());
+
+            assignmentFileRespoitory.save(assignmentFile);
+        } catch (IOException | FileStorageException ex) {
+            throw new FileStorageException("Could not store file " + fileName + ". Please try again!");
+        }
+
+    }
+
     public UploadFileResponse uploadFile(MultipartFile multipartFile, UUID classId) {
         ClassFile classFile = this.saveFile(multipartFile, classId);
 
@@ -84,4 +106,11 @@ public class ClassService {
     }
 
 
+    public Assignment createAssignment(AssignmentDTO assignmentDTO, UUID classId) {
+        Class class_ = classRepository.findById(classId).orElseThrow(() -> new BadRequestException("Could not find class"));
+        Assignment assignment = new Assignment(assignmentDTO.getName(),class_, assignmentDTO.getInstructions());
+        assignmentDTO.getFiles().forEach(file -> saveAssignmentFile(file, assignment));
+        return assignmentRepository.save(assignment);
+
+    }
 }
