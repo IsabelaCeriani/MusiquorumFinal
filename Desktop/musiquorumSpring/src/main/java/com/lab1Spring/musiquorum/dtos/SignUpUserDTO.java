@@ -21,8 +21,7 @@ public class SignUpUserDTO {
 
     private String profilePictureURL;
 
-    @NotBlank
-    private String phoneNumber;
+
 
     private boolean isActive;
 
@@ -35,10 +34,9 @@ public class SignUpUserDTO {
 
     public SignUpUserDTO() {}
 
-    public SignUpUserDTO(String username, String phoneNumber, String email, String password) {
+    public SignUpUserDTO(String username,  String email, String password) {
         this.username = username;
         this.email = email;
-        this.phoneNumber = phoneNumber;
         this.password = password;
         this.isActive = true;
     }
@@ -94,13 +92,7 @@ public class SignUpUserDTO {
         this.updatedAt = updatedAt;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
 
     public boolean isActive() {
         return isActive;

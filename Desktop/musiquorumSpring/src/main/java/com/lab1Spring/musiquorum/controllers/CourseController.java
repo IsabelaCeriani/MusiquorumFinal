@@ -52,10 +52,29 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getAllCourses());
     }
 
+    @GetMapping("/{courseId}")
+    public  ResponseEntity<Course> getCourseById(@PathVariable UUID courseId){
+        return ResponseEntity.ok(courseService.getCourseById(courseId));
+    }
+
     @GetMapping("/teacherCourses/{profId}")
     public  ResponseEntity<List<Course>> getMyProfCourses(@PathVariable @Valid UUID profId){
         return ResponseEntity.ok(courseService.getTeacherCourses(profId));
     }
 
+    @GetMapping("/{courseName}")
+    public  ResponseEntity<List<Course>> getCoursesByTitle(@PathVariable String courseName){
+        return ResponseEntity.ok(courseService.getCoursesByTitle(courseName));
+    }
+
+    @GetMapping("/{tags}")
+    public  ResponseEntity<List<Course>> getCoursesByTags(@PathVariable List<String> tags){
+        return ResponseEntity.ok(courseService.getCourseByTags(tags));
+    }
+
+    @PostMapping("enroll/{courseId}/{userId}")
+    public ResponseEntity<Course> enrollToCourse(@PathVariable @Valid UUID courseId, @PathVariable @Valid UUID userId){
+        return ResponseEntity.ok(courseService.enrollToCourse(courseId, userId));
+    }
 
 }

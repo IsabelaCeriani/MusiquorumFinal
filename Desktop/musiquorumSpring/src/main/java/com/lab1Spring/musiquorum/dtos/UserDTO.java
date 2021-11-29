@@ -14,7 +14,6 @@ public class UserDTO {
     private UUID id;
 
     private String username;
-    private String phoneNumber;
 
     @Email(message = "Por favor ingrese un email valido")
     private String email;
@@ -26,22 +25,19 @@ public class UserDTO {
 
     public UserDTO() {}
 
-    public UserDTO(String username, String phoneNumber, String email) {
+    public UserDTO(String username, String email) {
         this.username = username;
-        this.phoneNumber = phoneNumber;
         this.email = email;
     }
 
     public UserDTO(String name, String phoneNumber, String email, UUID id) {
         this.username = name;
-        this.phoneNumber = phoneNumber;
         this.email = email;
         this.id = id;
     }
 
     public UserDTO(User user){
         this.username = user.getUsername();
-        this.phoneNumber = user.getPhoneNumber();
         this.email = user.getEmail();
         this.profilePictureURL = user.getProfilePictureURL();
         this.id = user.getId();
@@ -55,9 +51,7 @@ public class UserDTO {
         return username;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
+
 
     @PrePersist
     protected void onCreate() {
@@ -93,9 +87,7 @@ public class UserDTO {
         this.username = username;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+
 
     public void setEmail(String email) {
         this.email = email;

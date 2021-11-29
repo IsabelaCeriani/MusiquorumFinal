@@ -4,22 +4,16 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-public class Tag {
-
+public class Material {
 
     @Id
     @GeneratedValue( strategy = GenerationType.AUTO )
     private UUID id;
 
-    @Column(unique = true)
-    private String name;
 
-    public Tag(String name) {
-        this.name = name;
-    }
+    @ManyToOne
+    private Class class_;
 
 
-    public Tag() {
 
-    }
 }

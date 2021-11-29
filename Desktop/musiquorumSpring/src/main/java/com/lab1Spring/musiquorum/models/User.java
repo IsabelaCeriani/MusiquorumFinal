@@ -22,8 +22,6 @@ public class User implements UserDetails {
     @NotBlank
     private String username;
 
-    @NotBlank
-    private String phoneNumber;
 
     @NotBlank
     private String email;
@@ -42,9 +40,8 @@ public class User implements UserDetails {
 
     public User() {}
 
-    public User(String username, String phoneNumber, String email) {
+    public User(String username, String email) {
         this.username = username;
-        this.phoneNumber = phoneNumber;
         this.email = email;
         this.password = "";
     }
@@ -101,9 +98,6 @@ public class User implements UserDetails {
     }
 
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
 
     public String getEmail() {
         return email;
@@ -125,9 +119,6 @@ public class User implements UserDetails {
         this.username = name;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
 
     public void setEmail(String email) {
         this.email = email;

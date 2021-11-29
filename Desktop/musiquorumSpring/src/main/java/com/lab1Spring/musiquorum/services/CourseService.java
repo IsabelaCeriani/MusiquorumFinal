@@ -41,16 +41,26 @@ public class CourseService {
         return new ArrayList<Course>((Collection<? extends Course>) courseRepository.findAll());
     }
 
+    public Course getCourseById(UUID courseId){
+        return courseRepository.findById(courseId).orElseThrow(() -> new BadRequestException("Could not find course"));
+    }
 
+
+    public List<Tag> saveOrGetTag(List<String> toBeTag){
+        List<Tag> tags = new ArrayList<Tag>();
+        for (String tag : toBeTag) {
+            if (tagRepository.findFirstByName(tag.toLowerCase(Locale.ROOT)).isPresent()) tags.add(tagRepository.findFirstByName(tag.toLowerCase(Locale.ROOT)).get());
+            else tags.add(tagRepository.save((new Tag(tag.toLowerCase(Locale.ROOT)))));
+        }
+
+        return tags;
+    }
 
     public CourseDTO addCourse(CreateCourseDTO courseDTO, UUID professorId) {
         User prof = userRepository.findById(professorId).orElseThrow(() -> new BadRequestException("Could not find user"));
 //        isValidData(courseDTO);
         Course course = new Course(courseDTO.getName(), courseDTO.getDescription(), prof.getId(), courseDTO.getImg());
-        List<Tag> tags = new ArrayList<Tag>();
-        courseDTO.getTags().forEach(tag -> tags.add(new Tag(tag)));
-        tagRepository.saveAll(tags);
-        course.setTags(tags);
+        course.setTags(saveOrGetTag(courseDTO.getTags()));
         courseRepository.save(course);
         CourseDTO courseDTO1 = new CourseDTO();
         BeanUtils.copyProperties(course, courseDTO1);
@@ -93,4 +103,25 @@ public class CourseService {
         User user = userRepository.findById(professorId).orElseThrow(() -> new BadRequestException("Could not find user"));
         return courseRepository.findByProfessorId(user.getId());
     }
+
+    public List<Course> getCoursesByTitle(String courseName) {
+        return courseRepository.findByNameContains(courseName);
+    }
+
+    public List<Course> getCourseByTags(List<String> tags){
+        return courseRepository.findByTagsNameIn(tags);
+    }
+
+    public Course enrollToCourse(UUID courseId, UUID userId) {
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new BadRequestException("Could not find course"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new BadRequestException("Could not find user"));
+        if(course.getEnrolledUsers().contains(user)) throw new BadRequestException("User is already enrolled to this course");
+        course.getEnrolledUsers().add(user);
+        courseRepository.save(course);
+        return course;
+    }
+
+
+
+
 }

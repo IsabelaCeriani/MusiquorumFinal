@@ -1,23 +1,14 @@
 package com.lab1Spring.musiquorum.controllers;
 
 import com.lab1Spring.musiquorum.dtos.*;
-import com.lab1Spring.musiquorum.exceptions.BadRequestException;
-import com.lab1Spring.musiquorum.models.User;
 import com.lab1Spring.musiquorum.services.UserService;
-import com.sun.net.httpserver.HttpServer;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -58,12 +49,12 @@ public class UserController {
 //    }
 
     @GetMapping("/logout")
-    public String logoutPage(HttpServletRequest request, HttpServletResponse response) {
+    public ResponseEntity logoutPage(HttpServletRequest request, HttpServletResponse response) {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             if (auth != null){
                 new SecurityContextLogoutHandler().logout(request, response, auth);
             }
-            return "redirect:/";
+            return ResponseEntity.ok().build();
         }
 
 
