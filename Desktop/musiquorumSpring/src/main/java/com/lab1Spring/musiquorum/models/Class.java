@@ -66,5 +66,11 @@ public class Class {
         this.duration = duration;
     }
 
+    public void setId(UUID id) {
+        this.id = id;
+    }
 
+    public void setCourse(Course course) {
+        this.course = course;
+    }
 }

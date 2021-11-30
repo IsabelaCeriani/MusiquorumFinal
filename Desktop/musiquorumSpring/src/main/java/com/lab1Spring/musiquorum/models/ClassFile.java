@@ -22,7 +22,7 @@ public class ClassFile {
     private byte[] data;
 
     @ManyToOne
-    private Class class_;
+    private Class classs;
 
 
 
@@ -35,7 +35,7 @@ public class ClassFile {
         this.fileType = fileType;
         this.dateUploaded = dateUploaded;
         this.data = data;
-        this.class_ = class_;
+        this.classs = class_;
     }
 
     public void setId(UUID id) {
@@ -77,4 +77,9 @@ public class ClassFile {
     public byte[] getData() {
         return data;
     }
+
+    public Class getClasss() {
+        return classs;
+    }
+
 }
