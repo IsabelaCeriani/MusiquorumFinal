@@ -74,11 +74,12 @@ public class MailService {
 //
         msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
         msg.setSubject("You've got a new assignment" );
-        msg.setContent(
-                //blue background
-                "<html><body style=\"background-color: #00bfff;\">" +
-                        "<h1>This is actual message embedded in HTML tags</h1>",
-                "text/html");
+//        msg.setContent(
+//                //blue background
+//                "<html><body style=\"background-color: #00bfff;\">" +
+//                        "<h1>This is actual message embedded in HTML tags </h1>",
+//                "text/html");
+        msg.setText("You've got a new Assignment for class " + assignment.getClass_().getClassName());
 //        msg.setText( "You've been invited to participate in " + event.getName() +  " on " + new Date(event.getDate()) + "\n" +  invitation.getMessage() + "\n"+"Click here to accept: " + "http://localhost:3000/invites/" + invitation.getId());
 //        msg.setSentDate(new Date());
 
