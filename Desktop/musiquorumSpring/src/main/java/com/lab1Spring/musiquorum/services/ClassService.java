@@ -148,7 +148,7 @@ public class ClassService {
     }
 
     public List<Assignment> getAssignments(UUID classId) {
-        return assignmentRepository.findByClass__Id(classId);
+        return assignmentRepository.findByClasss_Id(classId);
     }
 
 //    public Assignment editAssigment(AssignmentDTO assignmentDTO, UUID classId) {

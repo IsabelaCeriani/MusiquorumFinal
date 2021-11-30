@@ -66,13 +66,13 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getEnrolledInCourses(userID));
     }
 
-    @GetMapping("/{courseName}")
-    public  ResponseEntity<List<Course>> getCoursesByTitle(@PathVariable String courseName){
+    @GetMapping("/byName")
+    public  ResponseEntity<List<Course>> getCoursesByTitle(@RequestBody String courseName){
         return ResponseEntity.ok(courseService.getCoursesByTitle(courseName));
     }
 
-    @GetMapping("/{tags}")
-    public  ResponseEntity<List<Course>> getCoursesByTags(@PathVariable List<String> tags){
+    @GetMapping("/byTags")
+    public  ResponseEntity<List<Course>> getCoursesByTags(@RequestBody List<String> tags){
         return ResponseEntity.ok(courseService.getCourseByTags(tags));
     }
 

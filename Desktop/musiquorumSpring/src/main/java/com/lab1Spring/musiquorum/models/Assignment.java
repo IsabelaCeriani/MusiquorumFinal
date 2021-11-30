@@ -17,7 +17,7 @@ public class Assignment {
     private String name;
 
     @ManyToOne
-    private Class class_;
+    private Class classs;
 
     private String instructions;
 
@@ -31,7 +31,7 @@ public class Assignment {
 
     public Assignment(String name, Class class_, String instructions) {
         this.name = name;
-        this.class_ = class_;
+        this.classs = class_;
         this.instructions = instructions;
 
     }
@@ -45,7 +45,7 @@ public class Assignment {
     }
 
     public void setClass_(Class class_) {
-        this.class_ = class_;
+        this.classs = class_;
     }
 
     public void setInstructions(String instructions) {
@@ -61,12 +61,14 @@ public class Assignment {
         return name;
     }
 
-    public Class getClass_() {
-        return class_;
+    public Class getClasss() {
+        return classs;
     }
 
     public String getInstructions() {
         return instructions;
     }
+
+
 
 }

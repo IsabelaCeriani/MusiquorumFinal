@@ -185,7 +185,7 @@ public class UserService implements UserDetailsService {
         List<PendingAssignmentDTO> response = new ArrayList<>();
         List<Homework> pendingHomeworks =homeworkRepository.findByUserid(userId).stream().filter(h -> h.getStatus().equals(HomeworkStatus.NOT_SUBMITTED)).collect(Collectors.toList());
         for (Homework homework : pendingHomeworks) {
-            Course course  = homework.getAssignment().getClass_().getCourse();
+            Course course  = homework.getAssignment().getClasss().getCourse();
             response.add(new PendingAssignmentDTO(course.getId(), course.getName(), homework.getAssignment()));
         }
         return response;
