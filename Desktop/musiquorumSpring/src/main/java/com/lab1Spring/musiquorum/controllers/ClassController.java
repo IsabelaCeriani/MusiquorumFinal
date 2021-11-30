@@ -2,16 +2,21 @@ package com.lab1Spring.musiquorum.controllers;
 
 import com.lab1Spring.musiquorum.dtos.AssignmentDTO;
 import com.lab1Spring.musiquorum.dtos.CreateClassDTO;
-import com.lab1Spring.musiquorum.models.Assignment;
+import com.lab1Spring.musiquorum.models.*;
 import com.lab1Spring.musiquorum.models.Class;
 import com.lab1Spring.musiquorum.responses.UploadFileResponse;
 import com.lab1Spring.musiquorum.services.ClassService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -27,6 +32,10 @@ public class ClassController {
     @GetMapping("/{classId}")
     public ResponseEntity<Class> getClass(@PathVariable UUID classId) {
         return ResponseEntity.ok(classService.getClassById(classId));
+    }
+    @GetMapping("/{courseId}")
+    public ResponseEntity<List<Class>> getClassByCourse(@PathVariable UUID courseId) {
+        return ResponseEntity.ok(classService.getClassByCourseId(courseId));
     }
 
     @PutMapping("/{classId}")
@@ -52,6 +61,43 @@ public class ClassController {
     @PostMapping("/assignment/{classId}")
     public ResponseEntity<Assignment> createAssigment(@RequestBody AssignmentDTO assignmentDTO, @PathVariable UUID classId) {
         return  ResponseEntity.ok(classService.createAssignment(assignmentDTO, classId));
+    }
+
+//    @PutMapping("/assignment/{classId}")
+//    public ResponseEntity<Assignment> editAssigment(@RequestBody AssignmentDTO assignmentDTO, @PathVariable UUID classId) {
+//        return  ResponseEntity.ok(classService.editAssigment(assignmentDTO, classId));
+//    }
+
+
+    @GetMapping("/downloadFiles/{classId}")
+    public List<ResponseEntity<Resource>> downloadFile(@PathVariable UUID classId) {
+        // Load file from database
+        List<ClassFile> dbClassFiles = classService.getFile(classId);
+
+        List<ResponseEntity<Resource>> resources = new ArrayList<>();
+
+        dbClassFiles.forEach(dbClassFile -> resources.add(ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(dbClassFile.getFileType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + dbClassFile.getFileName() + "\"")
+                .body(new ByteArrayResource(dbClassFile.getData()))));
+
+        return resources;
+    }
+
+    @GetMapping("/downloadAssignmentFile/{assignmentId}")
+    public List<ResponseEntity<Resource>> downloadAssignmentFile(@PathVariable UUID assignmentId) {
+        // Load file from database
+        List<AssignmentFile> assignmentFiles = classService.getsAssignmentFile(assignmentId);
+
+        List<ResponseEntity<Resource>> resources = new ArrayList<>();
+
+        assignmentFiles.forEach(assignmentFile -> resources.add(ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(assignmentFile.getFileType()))
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + assignmentFile.getFileName() + "\"")
+                .body(new ByteArrayResource(assignmentFile.getData()))));
+
+        return resources;
+
     }
 
 //    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {

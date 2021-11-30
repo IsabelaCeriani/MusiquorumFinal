@@ -19,6 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -128,4 +129,19 @@ public class ClassService {
         return assignmentRepository.save(assignment);
 
     }
+
+    public List<ClassFile> getFile(UUID classId) {
+        return fileRepository.findByClasss_Id(classId);
+    }
+
+    public List<AssignmentFile> getsAssignmentFile(UUID assignmentId) {
+            return assignmentFileRespoitory.findByAssignment_Id(assignmentId);
+    }
+
+    public List<Class> getClassByCourseId(UUID courseId) {
+        return classRepository.findByCourse_Id(courseId);
+    }
+
+//    public Assignment editAssigment(AssignmentDTO assignmentDTO, UUID classId) {
+//    }
 }

@@ -64,4 +64,12 @@ public class HomeworkService {
         }
 
     }
+
+    public HomeworkFile getFile(UUID fileId) {
+        return homeworkFileRepo.findById(fileId)
+                .orElseThrow(() -> new BadRequestException("File not found with id " + fileId));
+    }
+
+
+
 }
