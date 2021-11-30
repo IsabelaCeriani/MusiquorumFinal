@@ -10,6 +10,8 @@ import java.util.UUID;
 
 @Repository
 public interface AssignmentRepository extends JpaRepository<Assignment, UUID> {
+    List<Assignment> findByClass__Id(UUID id);
+
 
 
 

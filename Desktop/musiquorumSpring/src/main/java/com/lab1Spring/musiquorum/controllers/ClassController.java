@@ -63,7 +63,11 @@ public class ClassController {
         return  ResponseEntity.ok(classService.createAssignment(assignmentDTO, classId));
     }
 
-    //upload assignment file
+    @GetMapping("/assignments/{classId}")
+    public ResponseEntity<List<Assignment>> getAssignments(@PathVariable UUID classId) {
+        return ResponseEntity.ok(classService.getAssignments(classId));
+    }
+
     @PostMapping("/assignment/upload/{assignmentId}")
     public ResponseEntity<Assignment> uploadAssignmentFile(@RequestParam("file") MultipartFile file, @PathVariable UUID assignmentId) {
         return ResponseEntity.ok(classService.uploadAssignmentFile(file, assignmentId));
