@@ -5,7 +5,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
-import com.lab1Spring.musiquorum.models.*;
+
 
 @Entity
 public class Course {
@@ -34,6 +34,8 @@ public class Course {
 
     @ManyToMany
     private List<User> enrolledUsers;
+
+
 
     public Course(String name, String description, UUID professorId, List<Tag> tags) {
         this.name = name;

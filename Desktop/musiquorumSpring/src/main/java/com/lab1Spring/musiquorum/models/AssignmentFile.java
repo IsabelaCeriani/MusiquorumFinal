@@ -26,6 +26,9 @@ public class AssignmentFile {
     @Lob
     private byte[] data;
 
+    public AssignmentFile() {
+    }
+
     public AssignmentFile(String fileName, String fileType, Date dateUploaded, Assignment assignment, byte[] data) {
         this.fileName = fileName;
         this.fileType = fileType;

@@ -19,7 +19,11 @@ public class Class {
     private int duration;
 
     @ManyToOne
-    private final Course course;
+    private  Course course;
+
+    public Course getCourse() {
+        return course;
+    }
 
 
 
@@ -48,9 +52,7 @@ public class Class {
         return duration;
     }
 
-    public Course getCourse() {
-        return course;
-    }
+
 
     public Class(Course course) {
         this.course = course;

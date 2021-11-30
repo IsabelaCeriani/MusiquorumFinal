@@ -61,6 +61,10 @@ public class CourseController {
     public  ResponseEntity<List<Course>> getMyProfCourses(@PathVariable @Valid UUID profId){
         return ResponseEntity.ok(courseService.getTeacherCourses(profId));
     }
+    @GetMapping("/enrolledIn/{userID}")
+    public  ResponseEntity<List<Course>> enrolledInCourses(@PathVariable @Valid UUID userID){
+        return ResponseEntity.ok(courseService.getEnrolledInCourses(userID));
+    }
 
     @GetMapping("/{courseName}")
     public  ResponseEntity<List<Course>> getCoursesByTitle(@PathVariable String courseName){

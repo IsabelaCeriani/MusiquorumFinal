@@ -1,17 +1,16 @@
 package com.lab1Spring.musiquorum.services;
 
 import com.lab1Spring.musiquorum.dtos.EditUserDTO;
+import com.lab1Spring.musiquorum.dtos.PendingAssignmentDTO;
 import com.lab1Spring.musiquorum.dtos.UserDTO;
 import com.lab1Spring.musiquorum.dtos.SignUpUserDTO;
-import com.lab1Spring.musiquorum.exceptions.AuthenticationException;
 import com.lab1Spring.musiquorum.exceptions.BadRequestException;
-import com.lab1Spring.musiquorum.models.User;
-import com.lab1Spring.musiquorum.repositories.UserRepository;
+import com.lab1Spring.musiquorum.models.*;
+import com.lab1Spring.musiquorum.models.Class;
+import com.lab1Spring.musiquorum.repositories.*;
 import javassist.NotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,16 +19,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.validation.annotation.Validated;
-import  com.lab1Spring.musiquorum.exceptions.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.security.SecureRandom;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
@@ -42,6 +34,17 @@ public class UserService implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CourseRepository courseRepository;
+
+    @Autowired
+    private AssignmentRepository assignmentRepository;
+
+    @Autowired
+    private ClassRepository classRepository;
+
+    @Autowired
+    private HomeworkRepository homeworkRepository;
 
 //    @Autowired
     private PasswordEncoder passwordEncoder= new BCryptPasswordEncoder();
@@ -178,4 +181,13 @@ public class UserService implements UserDetailsService {
     }
 
 
+    public List<PendingAssignmentDTO> getPendingAssignments(UUID userId) {
+        List<PendingAssignmentDTO> response = new ArrayList<>();
+        List<Homework> pendingHomeworks =homeworkRepository.findByUserid(userId).stream().filter(h -> h.getStatus().equals(HomeworkStatus.NOT_SUBMITTED)).collect(Collectors.toList());
+        for (Homework homework : pendingHomeworks) {
+            Course course  = homework.getAssignment().getClass_().getCourse();
+            response.add(new PendingAssignmentDTO(course.getId(), course.getName(), homework.getAssignment()));
+        }
+        return response;
+}
 }

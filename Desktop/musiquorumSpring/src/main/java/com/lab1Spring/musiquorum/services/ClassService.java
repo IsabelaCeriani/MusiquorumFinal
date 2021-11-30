@@ -16,6 +16,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Objects;
@@ -38,6 +39,12 @@ public class ClassService {
 
     @Autowired
     private AssignmentRepository assignmentRepository;
+
+    @Autowired
+    private MailService mailService;
+
+    @Autowired
+    private HomeworkRepository homeworkRepository;
 
 
     public CreateClassDTO addClass(CreateClassDTO classDTO, UUID courseId) {
@@ -109,6 +116,14 @@ public class ClassService {
     public Assignment createAssignment(AssignmentDTO assignmentDTO, UUID classId) {
         Class class_ = classRepository.findById(classId).orElseThrow(() -> new BadRequestException("Could not find class"));
         Assignment assignment = new Assignment(assignmentDTO.getName(),class_, assignmentDTO.getInstructions());
+        class_.getCourse().getEnrolledUsers().forEach(s-> {
+            try {
+                homeworkRepository.save(new Homework(s.getId(), assignment, HomeworkStatus.NOT_SUBMITTED));
+                mailService.sendAssignmentEmail(s.getEmail(), assignment);
+            } catch (MessagingException | IOException e) {
+                e.printStackTrace();
+            }
+        });
         assignmentDTO.getFiles().forEach(file -> saveAssignmentFile(file, assignment));
         return assignmentRepository.save(assignment);
 

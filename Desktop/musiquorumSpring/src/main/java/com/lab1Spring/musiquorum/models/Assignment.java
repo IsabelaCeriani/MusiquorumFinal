@@ -21,8 +21,6 @@ public class Assignment {
 
     private String instructions;
 
-//    @ManyToOne
-//    private User student;
 
 
 

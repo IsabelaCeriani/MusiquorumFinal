@@ -20,6 +20,7 @@ import org.springframework.validation.annotation.Validated;
 import java.util.*;
 
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Validated
@@ -122,6 +123,10 @@ public class CourseService {
     }
 
 
-
-
+    public List<Course> getEnrolledInCourses(UUID userID) {
+        return getAllCourses().stream()
+                .filter(course -> course.getEnrolledUsers()
+                .contains(userRepository.findById(userID).orElseThrow(() -> new BadRequestException("Could not find user"))))
+                .collect(Collectors.toList());
+    }
 }
