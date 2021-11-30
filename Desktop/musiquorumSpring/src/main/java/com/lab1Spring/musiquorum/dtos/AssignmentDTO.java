@@ -12,12 +12,10 @@ public class AssignmentDTO {
     private String instructions;
 
 
-    private List<MultipartFile> files;
 
-    public AssignmentDTO(String name, String instructions, List<MultipartFile> files) {
+    public AssignmentDTO(String name, String instructions) {
         this.name = name;
         this.instructions = instructions;
-        this.files = files;
     }
 
     public void setInstructions(String instructions) {
@@ -26,9 +24,6 @@ public class AssignmentDTO {
 
 
 
-    public void setFiles(List<MultipartFile> files) {
-        this.files = files;
-    }
 
     public String getInstructions() {
         return instructions;
@@ -36,9 +31,6 @@ public class AssignmentDTO {
 
 
 
-    public List<MultipartFile> getFiles() {
-        return files;
-    }
 
     public String getName() {
         return name;

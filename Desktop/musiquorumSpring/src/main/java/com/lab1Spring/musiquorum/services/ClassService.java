@@ -125,7 +125,6 @@ public class ClassService {
                 e.printStackTrace();
             }
         });
-        assignmentDTO.getFiles().forEach(file -> saveAssignmentFile(file, assignment));
         return assignmentRepository.save(assignment);
 
     }
@@ -140,6 +139,12 @@ public class ClassService {
 
     public List<Class> getClassByCourseId(UUID courseId) {
         return classRepository.findByCourse_Id(courseId);
+    }
+
+    public Assignment uploadAssignmentFile(MultipartFile file, UUID assignmentId) {
+        Assignment assignment = assignmentRepository.findById(assignmentId).orElseThrow(() -> new BadRequestException("Could not find assignment"));
+        saveAssignmentFile(file, assignment);
+        return assignment;
     }
 
 //    public Assignment editAssigment(AssignmentDTO assignmentDTO, UUID classId) {

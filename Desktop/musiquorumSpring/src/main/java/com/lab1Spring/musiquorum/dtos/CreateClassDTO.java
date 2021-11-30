@@ -13,10 +13,10 @@ public class CreateClassDTO {
     private String className;
 
     @NotNull
-    private int duration;
+    private String duration;
 
 
-    public CreateClassDTO(String className, int duration) {
+    public CreateClassDTO(String className, String duration) {
         this.className = className;
         this.duration = duration;
     }
@@ -25,7 +25,7 @@ public class CreateClassDTO {
         return className;
     }
 
-    public int getDuration() {
+    public String getDuration() {
         return duration;
     }
 
@@ -33,7 +33,7 @@ public class CreateClassDTO {
         this.className = className;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(String duration) {
         this.duration = duration;
     }
 }

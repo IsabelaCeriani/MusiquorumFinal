@@ -16,7 +16,7 @@ public class Class {
     private String className;
 
     @NotNull
-    private int duration;
+    private String duration;
 
     @ManyToOne
     private  Course course;
@@ -28,7 +28,7 @@ public class Class {
 
 
 
-    public Class(String className, int duration, Course course) {
+    public Class(String className, String duration, Course course) {
         this.className = className;
         this.duration = duration;
         this.course = course;
@@ -48,7 +48,7 @@ public class Class {
         return className;
     }
 
-    public int getDuration() {
+    public String getDuration() {
         return duration;
     }
 
@@ -62,7 +62,7 @@ public class Class {
         this.className = className;
     }
 
-    public void setDuration(int duration) {
+    public void setDuration(String duration) {
         this.duration = duration;
     }
 
