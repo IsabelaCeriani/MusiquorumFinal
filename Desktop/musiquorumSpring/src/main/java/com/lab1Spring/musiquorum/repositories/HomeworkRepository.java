@@ -15,6 +15,10 @@ public interface HomeworkRepository extends JpaRepository<Homework, UUID> {
 
     List<Homework> findByUserid(UUID userid);
 
+    List<Homework> findByAssignment_Id(UUID id);
+
+
+
 
 
 

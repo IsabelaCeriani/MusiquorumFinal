@@ -68,7 +68,7 @@ public class MailService {
 
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("musiquorum.notify@gmail.com", "musiquorum.notify1");
+                return new PasswordAuthentication("musiquorum.notify@gmail.com", "SegundaContrasela");
             }
         });
         Message msg = new MimeMessage(session);

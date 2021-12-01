@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -23,9 +24,14 @@ public class HomeworkController {
     private HomeworkService homeworkService;
 
 
-    @GetMapping("/{homeworkId}")
+    @GetMapping("id/{homeworkId}")
     public Homework getHomework(@PathVariable UUID homeworkId) {
         return homeworkService.getHomework(homeworkId);
+    }
+
+    @GetMapping("/{assignmentId}}")
+    public List<Homework> getHomeworksFromAssignment(@PathVariable UUID assignmentId) {
+        return homeworkService.getHomeworkFromAssignment(assignmentId);
     }
 
     @GetMapping("/downloadHomework/{fileId}")
