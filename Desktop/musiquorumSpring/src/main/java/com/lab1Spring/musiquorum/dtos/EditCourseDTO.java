@@ -23,17 +23,15 @@ public class EditCourseDTO {
 
     private List<String> tagsToRemove;
 
-    private String imageUrl;
 
 
-    public EditCourseDTO(String name, String description, UUID professorId, Boolean isActive, List<String> tagsToAdd, List<String> tagsToRemove, String imageUrl) {
+    public EditCourseDTO(String name, String description, UUID professorId, Boolean isActive, List<String> tagsToAdd, List<String> tagsToRemove) {
         this.name = name;
         this.description = description;
         this.professorId = professorId;
         this.isActive = isActive;
         this.tagsToAdd = tagsToAdd;
         this.tagsToRemove = tagsToRemove;
-        this.imageUrl = imageUrl;
     }
 
     public String getName() {
@@ -60,9 +58,6 @@ public class EditCourseDTO {
         return tagsToRemove;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
-    }
 
     public void setName(String name) {
         this.name = name;
@@ -88,7 +83,4 @@ public class EditCourseDTO {
         this.tagsToRemove = tagsToRemove;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
 }

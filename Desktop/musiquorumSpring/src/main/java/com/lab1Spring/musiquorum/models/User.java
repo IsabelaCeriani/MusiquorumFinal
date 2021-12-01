@@ -26,7 +26,8 @@ public class User implements UserDetails {
     @NotBlank
     private String email;
 
-    private String profilePictureURL;
+    @Lob
+    private byte[] image;
 
     @NotBlank
     private String password;
@@ -111,8 +112,8 @@ public class User implements UserDetails {
         return updatedAt;
     }
 
-    public String getProfilePictureURL() {
-        return profilePictureURL;
+    public byte[] getProfilePicture() {
+        return image;
     }
 
     public void setUsername(String name) {
@@ -124,8 +125,8 @@ public class User implements UserDetails {
         this.email = email;
     }
 
-    public void setProfilePictureURL(String profilePictureURL) {
-        this.profilePictureURL = profilePictureURL;
+    public void setProfilePicture(byte[] profilePictureURL) {
+        this.image = profilePictureURL;
     }
 
     public void setPassword(String password) {

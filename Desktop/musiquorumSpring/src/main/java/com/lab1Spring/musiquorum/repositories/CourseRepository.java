@@ -12,6 +12,12 @@ import java.util.UUID;
 public interface CourseRepository extends JpaRepository<Course, UUID> {
 
     List<Course> findByNameContains(String name);
+
+    List<Course> findByNameIsContaining(String name);
+
+    List<Course> findByName(String name);
+
+
     //method that returns all courses that contain all the tags in the list
     List<Course> findByTagsNameIn(List<String> tags);
     List<Course> findByProfessorId(UUID professorId);

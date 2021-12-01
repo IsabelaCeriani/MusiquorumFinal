@@ -29,8 +29,8 @@ public class Course {
     @ManyToMany
     private List<Tag> tags;
 
-    @NotNull
-    private String imageUrl;
+    @Lob
+    private byte[] image;
 
     @ManyToMany
     private List<User> enrolledUsers;
@@ -42,15 +42,15 @@ public class Course {
         this.description = description;
         this.professorId = professorId;
         this.tags = tags;
-        this.imageUrl = "";
+        this.image = new byte[0];
         isActive = true;
     }
 
-    public Course(String name, String description, UUID professorId,String imgUrl) {
+    public Course(String name, String description, UUID professorId,byte[] imgUrl) {
         this.name = name;
         this.description = description;
         this.professorId = professorId;
-        this.imageUrl = imgUrl;
+        this.image = imgUrl;
         isActive = true;
     }
 
@@ -58,6 +58,11 @@ public class Course {
 
     public Course() {
     }
+
+    public Course(String name, String description, UUID id) {
+    }
+
+
 
     public UUID getId() {
         return id;
@@ -115,12 +120,12 @@ public class Course {
         this.enrolledUsers = enrolledUsers;
     }
 
-    public String getImageUrl() {
-        return imageUrl;
+    public byte[] getImageUrl() {
+        return image;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageUrl(byte[] imageUrl) {
+        this.image = imageUrl;
     }
 
     public void addTag(Tag tag){

@@ -19,7 +19,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -190,4 +192,18 @@ public class UserService implements UserDetailsService {
         }
         return response;
 }
+
+    public User uploadPic(UUID userId, MultipartFile file) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new BadRequestException("User not found"));
+        if(!file.isEmpty()) {
+            try {
+                byte[] bytes = file.getBytes();
+                user.setProfilePicture(bytes);
+                userRepository.save(user);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return user;
+    }
 }

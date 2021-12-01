@@ -2,20 +2,12 @@ package com.lab1Spring.musiquorum.controllers;
 
 import com.lab1Spring.musiquorum.dtos.*;
 import com.lab1Spring.musiquorum.models.Course;
-import com.lab1Spring.musiquorum.models.User;
 import com.lab1Spring.musiquorum.services.CourseService;
-import com.lab1Spring.musiquorum.services.UserService;
-import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.Valid;
 import java.security.Principal;
 import java.util.List;
@@ -66,19 +58,24 @@ public class CourseController {
         return ResponseEntity.ok(courseService.getEnrolledInCourses(userID));
     }
 
-    @GetMapping("/byName")
-    public  ResponseEntity<List<Course>> getCoursesByTitle(@RequestBody String courseName){
+    @GetMapping("/byName/{courseName}")
+    public  ResponseEntity<List<Course>> getCoursesByTitle(@PathVariable String courseName){
         return ResponseEntity.ok(courseService.getCoursesByTitle(courseName));
     }
 
-    @GetMapping("/byTags")
-    public  ResponseEntity<List<Course>> getCoursesByTags(@RequestBody List<String> tags){
-        return ResponseEntity.ok(courseService.getCourseByTags(tags));
+    @GetMapping("/byTags/{tags}")
+    public  ResponseEntity<List<Course>> getCoursesByTags(@PathVariable String[] tags){
+        return ResponseEntity.ok(courseService.getCourseByTags(List.of(tags)));
     }
 
     @PostMapping("enroll/{courseId}/{userId}")
     public ResponseEntity<Course> enrollToCourse(@PathVariable @Valid UUID courseId, @PathVariable @Valid UUID userId){
         return ResponseEntity.ok(courseService.enrollToCourse(courseId, userId));
+    }
+
+    @PostMapping("/uploadPic/{courseId}")
+    public Course fileUpload(@RequestParam UUID courseId, @RequestParam("file") MultipartFile file) {
+        return courseService.uploadPic(courseId, file);
     }
 
 }

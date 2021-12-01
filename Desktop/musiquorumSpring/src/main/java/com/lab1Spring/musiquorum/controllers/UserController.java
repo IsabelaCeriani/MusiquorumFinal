@@ -1,6 +1,8 @@
 package com.lab1Spring.musiquorum.controllers;
 
 import com.lab1Spring.musiquorum.dtos.*;
+import com.lab1Spring.musiquorum.models.Course;
+import com.lab1Spring.musiquorum.models.User;
 import com.lab1Spring.musiquorum.services.UserService;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -74,6 +78,11 @@ public class UserController {
     @GetMapping("/pending/{userId}")
     public ResponseEntity<List<PendingAssignmentDTO>> getPendingAssignment(@PathVariable UUID userId) {
         return ResponseEntity.ok(userService.getPendingAssignments(userId));
+    }
+
+    @PostMapping("/uploadPic/{userId}")
+    public User fileUpload(@RequestParam UUID userId, @RequestParam("file") MultipartFile file) {
+        return userService.uploadPic(userId, file);
     }
 
 

@@ -16,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import com.lab1Spring.musiquorum.models.*;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
@@ -67,7 +68,7 @@ public class CourseService {
     public CourseDTO addCourse(CreateCourseDTO courseDTO, UUID professorId) {
         User prof = userRepository.findById(professorId).orElseThrow(() -> new BadRequestException("Could not find user"));
 //        isValidData(courseDTO);
-        Course course = new Course(courseDTO.getName(), courseDTO.getDescription(), prof.getId(), courseDTO.getImg());
+        Course course = new Course(courseDTO.getName(), courseDTO.getDescription(), prof.getId());
         course.setTags(saveOrGetTag(courseDTO.getTags()));
         courseRepository.save(course);
         CourseDTO courseDTO1 = new CourseDTO();
@@ -92,7 +93,6 @@ public class CourseService {
         tagRepository.saveAll(tagsToAdd);
         course.getTags().addAll(tagsToAdd);
         course.getTags().removeAll(tagsToRemove);
-        course.setImageUrl(courseDTO.getImageUrl());
         courseRepository.save(course);
         CourseDTO courseDTO1 = new CourseDTO();
         BeanUtils.copyProperties(course, courseDTO1);
@@ -140,5 +140,16 @@ public class CourseService {
                 .filter(course -> course.getEnrolledUsers()
                 .contains(userRepository.findById(userID).orElseThrow(() -> new BadRequestException("Could not find user"))))
                 .collect(Collectors.toList());
+    }
+
+    public Course uploadPic(UUID courseId, MultipartFile file) {
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new BadRequestException("Could not find course"));
+        try {
+            course.setImageUrl(file.getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        courseRepository.save(course);
+        return course;
     }
 }

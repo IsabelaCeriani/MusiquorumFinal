@@ -17,7 +17,7 @@ public class UserDTO {
 
     @Email(message = "Por favor ingrese un email valido")
     private String email;
-    private String profilePictureURL;
+    private byte[] profilePicture;
 
 
     private Date createdAt;
@@ -39,7 +39,7 @@ public class UserDTO {
     public UserDTO(User user){
         this.username = user.getUsername();
         this.email = user.getEmail();
-        this.profilePictureURL = user.getProfilePictureURL();
+        this.profilePicture = user.getProfilePicture();
         this.id = user.getId();
     }
 
@@ -67,8 +67,8 @@ public class UserDTO {
         return email;
     }
 
-    public String getProfilePictureURL() {
-        return profilePictureURL;
+    public byte[] getProfilePictureURL() {
+        return profilePicture;
     }
 
     public Date getCreatedAt() {
@@ -93,8 +93,8 @@ public class UserDTO {
         this.email = email;
     }
 
-    public void setProfilePictureURL(String profilePictureURL) {
-        this.profilePictureURL = profilePictureURL;
+    public void setProfilePictureURL(byte[] profilePictureURL) {
+        this.profilePicture = profilePictureURL;
     }
 
     public void setCreatedAt(Date createdAt) {
