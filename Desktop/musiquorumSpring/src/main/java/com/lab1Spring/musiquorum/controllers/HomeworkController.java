@@ -41,7 +41,7 @@ public class HomeworkController {
 
     @PostMapping("")
     public Homework handIn(@RequestBody HomeworkDTO homework) {
-        return homeworkService.createHomework(homework);
+        return homeworkService.handInHomework(homework);
     }
 
     @PutMapping("")

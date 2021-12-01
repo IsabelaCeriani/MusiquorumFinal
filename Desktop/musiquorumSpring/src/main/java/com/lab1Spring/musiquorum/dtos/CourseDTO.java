@@ -33,6 +33,15 @@ public class CourseDTO {
     public CourseDTO() {
     }
 
+    public CourseDTO(List<Tag> tags, Course course) {
+        this.tags = tags;
+        this.name = course.getName();
+        this.description = course.getDescription();
+        this.professorId = course.getProfessorId();
+        this.isActive =course.getActive();
+
+    }
+
     public CourseDTO(String name, String description, UUID professorId) {
         this.name = name;
         this.description = description;

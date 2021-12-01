@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import com.lab1Spring.musiquorum.models.*;
 import org.springframework.validation.annotation.Validated;
 
+import javax.mail.MessagingException;
+import java.io.IOException;
 import java.util.*;
 
 import java.util.UUID;
@@ -38,12 +40,17 @@ public class CourseService {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private MailService mailService;
+
     public List<Course> getAllCourses(){
         return new ArrayList<Course>((Collection<? extends Course>) courseRepository.findAll());
     }
 
     public Course getCourseById(UUID courseId){
-        return courseRepository.findById(courseId).orElseThrow(() -> new BadRequestException("Could not find course"));
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new BadRequestException("Could not find course"));
+//        List<Tag> tags = tagRepository.
+        return course;
     }
 
 
@@ -119,6 +126,11 @@ public class CourseService {
         if(course.getEnrolledUsers().contains(user)) throw new BadRequestException("User is already enrolled to this course");
         course.getEnrolledUsers().add(user);
         courseRepository.save(course);
+        try {
+            mailService.enrolledToCourseMail(user.getEmail(), course);
+        } catch (MessagingException | IOException e) {
+            e.printStackTrace();
+        }
         return course;
     }
 

@@ -7,11 +7,13 @@ import com.lab1Spring.musiquorum.exceptions.BadRequestException;
 import com.lab1Spring.musiquorum.exceptions.FileStorageException;
 import com.lab1Spring.musiquorum.models.*;
 import com.lab1Spring.musiquorum.repositories.HomeworkRepository;
+import com.lab1Spring.musiquorum.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Objects;
@@ -27,15 +29,28 @@ public class HomeworkService {
     private HomeworkFileRepo homeworkFileRepo;
 
 
+    @Autowired
+    private MailService mailService;
+
+    @Autowired
+    private UserRepository userRepository;
+
+
     public Homework getHomework(UUID homeworkId) {
         return homeworkRepository.findById(homeworkId).orElseThrow(() -> new BadRequestException("Homework not found"));
     }
 
-    public Homework createHomework(HomeworkDTO homeworkDTO) {
+    public Homework handInHomework(HomeworkDTO homeworkDTO) {
+        User user = userRepository.findById(homeworkDTO.getStudentId()).orElseThrow(() -> new BadRequestException("User not found"));
         Homework homework = homeworkRepository.findByUseridAndAssignmentId(homeworkDTO.getStudentId(), homeworkDTO.getAssignmentId());
         homework.setStatus(HomeworkStatus.SUBMITTED);
         homeworkRepository.save(homework);
         homeworkDTO.getFiles().forEach(file -> saveAssignmentFile(file, homework));
+        try {
+            mailService.homeworkHandedInMail(user.getEmail(), homework.getAssignment());
+        } catch (MessagingException | IOException e) {
+            e.printStackTrace();
+        }
         return homework;
     }
 
