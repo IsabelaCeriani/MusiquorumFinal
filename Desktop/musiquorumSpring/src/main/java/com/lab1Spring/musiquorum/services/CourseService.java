@@ -4,10 +4,9 @@ import com.lab1Spring.musiquorum.dtos.CourseDTO;
 import com.lab1Spring.musiquorum.dtos.CreateCourseDTO;
 import com.lab1Spring.musiquorum.dtos.EditCourseDTO;
 import com.lab1Spring.musiquorum.exceptions.BadRequestException;
+import com.lab1Spring.musiquorum.models.Class;
 import com.lab1Spring.musiquorum.models.Course;
-import com.lab1Spring.musiquorum.repositories.CourseRepository;
-import com.lab1Spring.musiquorum.repositories.TagRepository;
-import com.lab1Spring.musiquorum.repositories.UserRepository;
+import com.lab1Spring.musiquorum.repositories.*;
 import javassist.NotFoundException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +38,13 @@ public class CourseService {
     private TagRepository tagRepository;
 
     @Autowired
-    private UserService userService;
+    private ClassRepository classRepository;
+
+    @Autowired
+    private AssignmentRepository assignmentRepository;
+
+    @Autowired
+    private HomeworkRepository homeworkRepository;
 
     @Autowired
     private MailService mailService;
@@ -126,12 +131,34 @@ public class CourseService {
         if(course.getEnrolledUsers().contains(user)) throw new BadRequestException("User is already enrolled to this course");
         course.getEnrolledUsers().add(user);
         courseRepository.save(course);
+
         try {
             mailService.enrolledToCourseMail(user.getEmail(), course);
         } catch (MessagingException | IOException e) {
             e.printStackTrace();
         }
+        course.getEnrolledUsers().forEach(student -> giveHomework(courseId, student));
         return course;
+    }
+
+    public Course unenrollFromCourse(UUID courseId, UUID userId) {
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new BadRequestException("Could not find course"));
+        User user = userRepository.findById(userId).orElseThrow(() -> new BadRequestException("Could not find user"));
+        if(!course.getEnrolledUsers().contains(user)) throw new BadRequestException("User is not enrolled to this course");
+        course.getEnrolledUsers().remove(user);
+        courseRepository.save(course);
+        return course;
+    }
+
+    public void giveHomework(UUID courseId,  User student){
+        getAssignments(courseId).forEach(assignment ->  homeworkRepository.save(new Homework(student.getId(), assignment, HomeworkStatus.NOT_SUBMITTED)));
+    }
+
+    public List<Assignment> getAssignments(UUID courseId) {
+        List<Assignment> assignments;
+        List<Class> classes = classRepository.findByCourse_Id(courseId);
+        assignments = classes.stream().flatMap(cl -> assignmentRepository.findByClasss_Id(cl.getId()).stream()).collect(Collectors.toList());
+        return assignments;
     }
 
 
